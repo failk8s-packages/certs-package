@@ -1,0 +1,37 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:base64", "base64")
+
+#@ if data.values.certs_use=="local_ca":
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: local-root-ca
+  namespace: cert-manager
+data:
+  tls.crt: #@ base64.encode(data.values.local.root_ca.crt)
+  tls.key: #@ base64.encode(data.values.local.root_ca.key)
+
+
+#@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
+---
+spec:
+  #@overlay/remove
+  selfSigned:
+  #@overlay/match missing_ok=True
+  ca:
+    secretName: local-root-ca
+
+#@overlay/match by=overlay.subset({"kind":"Certificate", "metadata": {"name": "wildcard"}})
+---
+metadata:
+  #@overlay/match missing_ok=True
+  namespace: #@ data.values.ingress.namespace
+spec:
+  #@overlay/replace
+  dnsNames:
+  - #@ "*.{}".format(data.values.domain)
+  - #@ "*.{}".format(data.values.wildcard_domain)
+#@ end

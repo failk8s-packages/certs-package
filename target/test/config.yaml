@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: certs-config
+  namespace: certs-package
+stringData:
+  values.yml: null
