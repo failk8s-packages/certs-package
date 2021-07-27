@@ -1,16 +1,16 @@
 apiVersion: data.packaging.carvel.dev/v1alpha1
 kind: Package
 metadata:
-  name: certs.tkgdev.failk8s.com.1.0.0
+  name: certs.tkgdev.failk8s.com.develop
   namespace: kapp-controller-packaging-global
 spec:
   refName: certs.tkgdev.failk8s.com
-  version: 1.0.0
+  version: develop
   template:
     spec:
       fetch:
       - imgpkgBundle:
-          image: quay.io/failk8s/certs-package:1.0.0
+          image: quay.io/failk8s/certs-package:develop
       template:
       - ytt:
           paths:

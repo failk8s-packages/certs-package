@@ -4,6 +4,6 @@
         "name": "certs",
         "domain": "tkgdev.failk8s.com",
         "displayName": "Certificates management",
-        "version": "1.0.0"
+        "version": "develop"
     }
 }
