@@ -1,9 +1,9 @@
 {
     "registry": "quay.io/failk8s",
     "package": {
-        "name": "<PACKAGE-NAME>",
+        "name": "certs",
         "domain": "tkgdev.failk8s.com",
-        "displayName": "<DISPLAY NAME>",
-        "version": "<VERSION>"
+        "displayName": "Certificates management",
+        "version": "1.0.0"
     }
 }
