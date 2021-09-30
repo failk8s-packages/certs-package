@@ -1,0 +1,46 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:base64", "base64")
+
+#@ if data.values.certs_use=="aws":
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aws-route53-creds
+  namespace: #@ data.values.certmanager.namespace
+data:
+  aws-credentials: #@ base64.encode(data.values.aws.secret_access_key)
+
+
+#@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
+---
+spec:
+  #@overlay/remove
+  selfSigned:
+  #@overlay/match missing_ok=True
+  acme:
+    email: #@ data.values.aws.certs.email
+    solvers:
+    #@overlay/match by=lambda i,l,r: "dns01" in l
+    - dns01:
+        route53:
+          region: #@ data.values.aws.certs.region
+          accessKeyID: #@ data.values.aws.access_key_id
+    #@overlay/match by=lambda i,l,r: "http01" in l
+    - http01:
+        ingress:
+          class: #@ data.values.ingress.ingress_class
+
+#@overlay/match by=overlay.subset({"kind":"Certificate", "metadata": {"name": "wildcard"}})
+---
+metadata:
+  #@overlay/match missing_ok=True
+  namespace: #@ data.values.ingress.namespace
+spec:
+  #@overlay/replace
+  dnsNames:
+  - #@ "*.{}".format(data.values.domain)
+  - #@ "*.{}".format(data.values.wildcard_domain)
+#@ end
