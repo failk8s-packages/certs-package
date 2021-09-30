@@ -4,7 +4,7 @@
         "name": "certs",
         "domain": "dev.failk8s.com",
         "displayName": "Certificates management",
-        "version": "develop"
+        "version": "1.0.0"
     },
     "packages": []
 }
