@@ -1,1 +1,8 @@
 #! Add your values here (without ytt annotations)
+domain: failk8s.com
+wildcard_domain: apps.failk8s.com
+certs_use: local_ca
+local:
+  root_ca:
+    crt: CRT
+    key: KEY
