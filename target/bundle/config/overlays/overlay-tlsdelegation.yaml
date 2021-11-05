@@ -9,4 +9,3 @@ spec:
     - secretName: wildcard
       #@overlay/replace
       targetNamespaces: #@ data.values.tlsdelegation.targetns
-      
