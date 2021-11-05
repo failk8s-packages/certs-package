@@ -1,4 +1,4 @@
-#@data/values
+#@data/values-schema
 ---
 #! Namespace should be the same as cert-manager's namespace
 certmanager:
@@ -6,26 +6,29 @@ certmanager:
 ingress:
   namespace: projectcontour
   ingress_class: contour
+tlsdelegation:
+  targetns:
+  - "*"
 
-domain: REPLACE_ME
-wildcard_domain: REPLACE_ME
+domain: ""
+wildcard_domain: ""
 
-certs_use: REPLACE_ME #! One of aws, local_ca, provided
+certs_use: "" #! One of aws, local_ca, provided
 
 #! Aws credentials for IAM user with privileges to use cert-manager DNS01
 aws:
-  access_key_id: REPLACE_ME
-  secret_access_key: REPLACE_ME
+  access_key_id: ""
+  secret_access_key: ""
   certs:
     region: eu-west-1
     email: user@none.com #! If you want to get notified by Let's encrypt of certificate expiration
 
 local:
   root_ca:
-    crt:
-    key:
+    crt: ""
+    key: ""
 
 provided:
   wildcard_tls:
-    crt:
-    key:
+    crt: ""
+    key: ""

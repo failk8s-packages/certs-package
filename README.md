@@ -14,22 +14,23 @@ The following configuration values can be set to customize the certs installatio
 
 ### Global
 
-| Value | Required/Optional | Description |
-|-------|-------------------|-------------|
-| `certmanager.namespace` | Optional | The namespace in which to deploy certs. |
-| `ingress.namespace` | Required | |
-| `ingress.ingress_class` | Optional | |
-| `domain` | Required | |
-| `wildcard_domain` | Required | |
-| `certs_use` | Required | Values: aws, local_ca, provided |
-| `aws.access_key_id` | Required if certs_use=aws | |
-| `aws.secret_access_key` | Required if certs_use=aws | |
-| `aws.certs.region` | Required if certs_use=aws | |
-| `aws.certs.email` | Required if certs_use=aws | |
-| `local.root_ca.crt` | Required if certs_use=local_ca | |
-| `local.root_ca.key` | Required if certs_use=local_ca | |
-| `provided.wildcard_tls.crt` | Required if certs_use=provided | |
-| `provided.wildcard_tls.key` | Required if certs_use=provided | |
+| Value | Required/Optional | Default |Description |
+|-------|-------------------|---------|-------------|
+| `certmanager.namespace` | Optional | cert-manager | The namespace in which to deploy certs. |
+| `ingress.namespace` | Optional | projectcontour | |
+| `ingress.ingress_class` | Optional | contour | |
+| `tlsdelegation.targetns` | Optional | * | |
+| `domain` | Required | <EMPTY> | |
+| `wildcard_domain` | Required | <EMPTY> | |
+| `certs_use` | Required | <EMPTY> | Values: aws, local_ca, provided |
+| `aws.access_key_id` | Required if certs_use=aws | <EMPTY> | |
+| `aws.secret_access_key` | Required if certs_use=aws | <EMPTY> | |
+| `aws.certs.region` | Optional if certs_use=aws | eu-west-1 | |
+| `aws.certs.email` | Optional if certs_use=aws | user@none.com ||
+| `local.root_ca.crt` | Required if certs_use=local_ca | <EMPTY> ||
+| `local.root_ca.key` | Required if certs_use=local_ca | <EMPTY> ||
+| `provided.wildcard_tls.crt` | Required if certs_use=provided | <EMPTY> ||
+| `provided.wildcard_tls.key` | Required if certs_use=provided | <EMPTY> ||
 
 ## Usage Example
 

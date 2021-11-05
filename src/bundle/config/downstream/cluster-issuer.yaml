@@ -5,3 +5,4 @@ metadata:
   name: wildcard
 spec:
   selfSigned: {}
+#! namespace: By default, a ClusterIssuer will create secrets in cert-manager namespace

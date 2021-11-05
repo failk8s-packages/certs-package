@@ -22,12 +22,18 @@ spec:
   #@overlay/match missing_ok=True
   acme:
     email: #@ data.values.aws.certs.email
+    privateKeySecretRef:
+      name: eduk8s-wildcard-acme
+    server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
     #@overlay/match by=lambda i,l,r: "dns01" in l
     - dns01:
         route53:
           region: #@ data.values.aws.certs.region
           accessKeyID: #@ data.values.aws.access_key_id
+          secretAccessKeySecretRef:
+            name: aws-route53-creds
+            key: aws-credentials
     #@overlay/match by=lambda i,l,r: "http01" in l
     - http01:
         ingress:

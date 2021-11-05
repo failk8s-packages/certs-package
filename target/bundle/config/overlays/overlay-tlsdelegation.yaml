@@ -1,0 +1,12 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"TLSCertificateDelegation", "metadata": {"name": "wildcard"}})
+---
+spec:
+  delegations:
+    #@overlay/match by="secretName"
+    - secretName: wildcard
+      #@overlay/replace
+      targetNamespaces: #@ data.values.tlsdelegation.targetns
+      

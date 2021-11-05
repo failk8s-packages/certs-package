@@ -1,36 +1,11 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:assert", "assert")
 
-#@ if data.values.certmanager.namespace:
-#@   data.values.certmanager.namespace!="REPLACE_ME" or assert.fail("data.values.certmanager.namespace can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.certmanager.namespace can not be empty or REPLACE_ME")
-#@ end
-
-#@ if data.values.ingress.namespace:
-#@   data.values.ingress.namespace!="REPLACE_ME" or assert.fail("data.values.ingress.namespace can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.ingress.namespace can not be empty or REPLACE_ME")
-#@ end
-
-#@ if data.values.ingress.ingress_class:
-#@   data.values.ingress.ingress_class!="REPLACE_ME" or assert.fail("data.values.ingress.ingress_class can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.ingress.ingress_class can not be empty or REPLACE_ME")
-#@ end
-
-#@ if data.values.domain:
-#@   data.values.domain!="REPLACE_ME" or assert.fail("data.values.domain can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.domain can not be empty or REPLACE_ME")
-#@ end
-
-#@ if data.values.wildcard_domain:
-#@   data.values.wildcard_domain!="REPLACE_ME" or assert.fail("data.values.wildcard_domain can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.wildcard_domain can not be empty or REPLACE_ME")
-#@ end
-
+#@ data.values.certmanager.namespace or assert.fail("data.values.certmanager.namespace can not be empty")
+#@ data.values.ingress.namespace or assert.fail("data.values.ingress.namespace can not be empty")
+#@ data.values.ingress.ingress_class or assert.fail("data.values.ingress.ingress_class can not be empty")
+#@ data.values.domain or assert.fail("data.values.domain can not be empty")
+#@ data.values.wildcard_domain or assert.fail("data.values.wildcard_domain can not be empty")
 #@ data.values.certs_use=="aws" or data.values.certs_use=="local_ca" or data.values.certs_use=="provided" or assert.fail("values.domain.certs_use accepted values are: aws, local_ca, provided")
 
 #@ if data.values.certs_use=="local_ca":
@@ -39,27 +14,12 @@
 #@ end
 
 #@ if data.values.certs_use=="aws":
-#@ if data.values.aws.access_key_id:
-#@   data.values.aws.access_key_id!="REPLACE_ME" or assert.fail("data.values.aws.access_key_id can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.aws.access_key_id can not be empty or REPLACE_ME")
-#@ end
-#@ if data.values.aws.secret_access_key:
-#@   data.values.aws.secret_access_key!="REPLACE_ME" or assert.fail("data.values.aws.secret_access_key can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.aws.secret_access_key can not be empty or REPLACE_ME")
-#@ end
+#@   data.values.aws or assert.fail("data.values.aws keys need to be provided")
+#@   data.values.aws.access_key_id or assert.fail("data.values.aws.access_key_id can not be empty")
+#@   data.values.aws.secret_access_key or assert.fail("data.values.aws.secret_access_key can not be empty")
 #@ end
 
 #@ if data.values.certs_use=="provided":
-#@ if data.values.provided.wildcard_tls.crt:
-#@   data.values.provided.wildcard_tls.crt!="REPLACE_ME" or assert.fail("data.values.provided.wildcard_tls.crt can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.provided.wildcard_tls.crt can not be empty or REPLACE_ME")
-#@ end
-#@ if data.values.provided.wildcard_tls.key:
-#@   data.values.provided.wildcard_tls.key!="REPLACE_ME" or assert.fail("data.values.provided.wildcard_tls.key can not be empty or REPLACE_ME")
-#@ else:
-#@   assert.fail("data.values.provided.wildcard_tls.key can not be empty or REPLACE_ME")
-#@ end
+#@   data.values.provided.wildcard_tls.crt or assert.fail("data.values.provided.wildcard_tls.crt can not be empty")
+#@   data.values.provided.wildcard_tls.key or assert.fail("data.values.provided.wildcard_tls.key can not be empty")
 #@ end

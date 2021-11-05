@@ -6,6 +6,9 @@ certmanager:
 ingress:
   namespace: projectcontour
   ingress_class: contour
+tlsdelegation:
+  targetns:
+  - "*"
 
 domain: REPLACE_ME
 wildcard_domain: REPLACE_ME
