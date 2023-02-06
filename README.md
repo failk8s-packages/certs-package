@@ -4,6 +4,8 @@ This package provides certificate management functionality using cert-manager an
 
 See [Cert manager's Route53 Docs](https://docs.cert-manager.io/en/release-0.11/tasks/issuers/setup-acme/dns01/route53.html) for how to configure AWS IAM
 
+See: https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers
+
 ## Components
 
 * certs
