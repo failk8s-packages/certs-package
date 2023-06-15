@@ -1,0 +1,5 @@
+#! Add your values here (without ytt annotations)
+---
+domain: spring-staging.academy
+wildcard_domain: apps.spring-staging.academy
+certs_use: aws

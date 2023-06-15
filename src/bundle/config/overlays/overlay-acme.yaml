@@ -4,6 +4,7 @@
 
 #@ if data.values.certs_use=="aws":
 
+#@ if/end (data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key):
 ---
 apiVersion: v1
 kind: Secret
@@ -11,8 +12,7 @@ metadata:
   name: aws-route53-creds
   namespace: #@ data.values.certmanager.namespace
 data:
-  aws-credentials: #@ base64.encode(data.values.aws.secret_access_key)
-
+  aws-credentials: #@ base64.encode(data.values.aws.auth.iam.secret_access_key)
 
 #@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
 ---
@@ -26,18 +26,20 @@ spec:
       name: eduk8s-wildcard-acme
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
-    #@overlay/match by=lambda i,l,r: "dns01" in l
-    - dns01:
-        route53:
-          region: #@ data.values.aws.certs.region
-          accessKeyID: #@ data.values.aws.access_key_id
-          secretAccessKeySecretRef:
-            name: aws-route53-creds
-            key: aws-credentials
-    #@overlay/match by=lambda i,l,r: "http01" in l
-    - http01:
-        ingress:
-          class: #@ data.values.ingress.ingress_class
+      #@overlay/match by=lambda i,l,r: "dns01" in l
+      - dns01:
+          route53:
+            region: #@ data.values.aws.certs.region
+            #@ if (data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key):
+            accessKeyID: #@ data.values.aws.auth.iam.access_key_id
+            secretAccessKeySecretRef:
+              name: aws-route53-creds
+              key: aws-credentials
+            #@ end
+      #@overlay/match by=lambda i,l,r: "http01" in l
+      - http01:
+          ingress:
+            class: #@ data.values.ingress.ingress_class
 
 #@overlay/match by=overlay.subset({"kind":"Certificate", "metadata": {"name": "wildcard"}})
 ---
@@ -47,6 +49,6 @@ metadata:
 spec:
   #@overlay/replace
   dnsNames:
-  - #@ "*.{}".format(data.values.domain)
-  - #@ "*.{}".format(data.values.wildcard_domain)
+    -  #@ "*.{}".format(data.values.domain)
+    -  #@ "*.{}".format(data.values.wildcard_domain)
 #@ end

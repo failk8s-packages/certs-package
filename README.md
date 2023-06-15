@@ -25,8 +25,8 @@ The following configuration values can be set to customize the certs installatio
 | `domain` | Required | <EMPTY> | |
 | `wildcard_domain` | Required | <EMPTY> | |
 | `certs_use` | Required | <EMPTY> | Values: aws, local_ca, provided |
-| `aws.access_key_id` | Required if certs_use=aws | <EMPTY> | |
-| `aws.secret_access_key` | Required if certs_use=aws | <EMPTY> | |
+| `aws.auth.iam.access_key_id` | Required if certs_use=aws and not using AWS IRSA | <EMPTY> | |
+| `aws.auth.iam.secret_access_key` | Required if certs_use=aws and not using AWS IRSA | <EMPTY> | |
 | `aws.certs.region` | Optional if certs_use=aws | eu-west-1 | |
 | `aws.certs.email` | Optional if certs_use=aws | user@none.com ||
 | `local.root_ca.crt` | Required if certs_use=local_ca | <EMPTY> ||
@@ -42,7 +42,7 @@ This walkthrough guides you through using certs...
 
 Test aws Route53/Let's encrypt certificate generation:
 ```
-ytt -f src/bundle/config -v domain=example.com -v wildcard_domain=apps.example.com -v aws.access_key_id=xxxx -v aws.secret_access_key=yyyy -v certs_use=aws
+ytt -f src/bundle/config -v domain=example.com -v wildcard_domain=apps.example.com -v aws.auth.iam.access_key_id=xxxx -v aws.auth.iam.secret_access_key=yyyy -v certs_use=aws
 ```
 
 Test providing a local CA to the cluster:

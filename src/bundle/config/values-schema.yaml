@@ -8,17 +8,19 @@ ingress:
   ingress_class: contour
 tlsdelegation:
   targetns:
-  - "*"
+    - "*"
 
 domain: ""
 wildcard_domain: ""
 
 certs_use: "" #! One of aws, local_ca, provided
 
-#! Aws credentials for IAM user with privileges to use cert-manager DNS01
+#! Aws credentials for IAM user with privileges to use cert-manager DNS01 (Leave empty if using AWS IAM IRSA)
 aws:
-  access_key_id: ""
-  secret_access_key: ""
+  auth:
+    iam:
+      access_key_id: ""
+      secret_access_key: ""
   certs:
     region: eu-west-1
     email: user@none.com #! If you want to get notified by Let's encrypt of certificate expiration

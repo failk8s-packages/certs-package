@@ -14,9 +14,12 @@
 #@ end
 
 #@ if data.values.certs_use=="aws":
-#@   data.values.aws or assert.fail("data.values.aws keys need to be provided")
-#@   data.values.aws.access_key_id or assert.fail("data.values.aws.access_key_id can not be empty")
-#@   data.values.aws.secret_access_key or assert.fail("data.values.aws.secret_access_key can not be empty")
+#@ if data.values.aws.auth.iam.access_key_id:
+#@   data.values.aws.auth.iam.secret_access_key or assert.fail("data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key need to be provided both or left empty if using AWS IRSA")
+#@ end
+#@ if data.values.aws.auth.iam.secret_access_key:
+#@   data.values.aws.auth.iam.secret_access_key or assert.fail("data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key need to be provided both or left empty if using AWS IRSA")
+#@ end
 #@ end
 
 #@ if data.values.certs_use=="provided":

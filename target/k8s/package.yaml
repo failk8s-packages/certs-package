@@ -1,15 +1,26 @@
+---
 apiVersion: data.packaging.carvel.dev/v1alpha1
 kind: Package
 metadata:
-  name: certs.dev.failk8s.com.0.0.0+develop
+  annotations:
+    kbld.k14s.io/images: |
+      - origins:
+        - resolved:
+            tag: 1.1.0
+            url: quay.io/failk8s/certs-package:1.1.0
+        url: quay.io/failk8s/certs-package@sha256:432479be08716db9f6a73368e4ee1ee89f3c3e635707467a587a688f3f1ffe30
+  name: certs.dev.failk8s.com.1.1.0
 spec:
   refName: certs.dev.failk8s.com
-  version: 0.0.0+develop
   template:
     spec:
+      deploy:
+      - kapp:
+          rawOptions:
+          - --wait-timeout=5m
       fetch:
       - imgpkgBundle:
-          image: quay.io/failk8s/certs-package:develop
+          image: quay.io/failk8s/certs-package@sha256:432479be08716db9f6a73368e4ee1ee89f3c3e635707467a587a688f3f1ffe30
       template:
       - ytt:
           paths:
@@ -18,7 +29,4 @@ spec:
           paths:
           - '-'
           - .imgpkg/images.yml
-      deploy:
-      - kapp:
-          rawOptions:
-          - --wait-timeout=5m
+  version: 1.1.0
