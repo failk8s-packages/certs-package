@@ -2,7 +2,7 @@
 #@ load("@ytt:overlay", "overlay")
 #@ load("@ytt:base64", "base64")
 
-#@ if data.values.certs_use=="provided":
+#@ if data.values.certProvider=="provided":
 ---
 kind: Secret
 apiVersion: v1
@@ -11,15 +11,13 @@ metadata:
   namespace: #@ data.values.ingress.namespace
 type: kubernetes.io/tls
 data:
-  tls.crt: #@ base64.encode(data.values.provided.wildcard_tls.crt)
-  tls.key: #@ base64.encode(data.values.provided.wildcard_tls.key)
+  tls.crt: #@ base64.encode(data.values.provided.wildcartCert.crt)
+  tls.key: #@ base64.encode(data.values.provided.wildcartCert.key)
 
 #@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
 #@overlay/remove
 ---
-
 #@overlay/match by=overlay.subset({"kind":"Certificate", "metadata": {"name": "wildcard"}})
 #@overlay/remove
 ---
-
 #@ end

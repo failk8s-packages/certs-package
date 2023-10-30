@@ -3,26 +3,24 @@
 
 #@ data.values.certmanager.namespace or assert.fail("data.values.certmanager.namespace can not be empty")
 #@ data.values.ingress.namespace or assert.fail("data.values.ingress.namespace can not be empty")
-#@ data.values.ingress.ingress_class or assert.fail("data.values.ingress.ingress_class can not be empty")
-#@ data.values.domain or assert.fail("data.values.domain can not be empty")
-#@ data.values.wildcard_domain or assert.fail("data.values.wildcard_domain can not be empty")
-#@ data.values.certs_use=="aws" or data.values.certs_use=="local_ca" or data.values.certs_use=="provided" or assert.fail("values.domain.certs_use accepted values are: aws, local_ca, provided")
+#@ data.values.ingress.ingressClass or assert.fail("data.values.ingress.ingressClass can not be empty")
+#@ data.values.domains or assert.fail("data.values.domains can not be empty")
 
-#@ if data.values.certs_use=="local_ca":
-#@   data.values.local.root_ca.crt or assert.fail("missing local.root_ca.crt definition")
-#@   data.values.local.root_ca.key or assert.fail("missing local.root_ca.key definition")
+#@ if data.values.certProvider=="local":
+#@   data.values.local.rootCA.crt or assert.fail("missing local.rootCA.crt definition")
+#@   data.values.local.rootCA.key or assert.fail("missing local.rootCA.key definition")
 #@ end
 
-#@ if data.values.certs_use=="aws":
-#@ if data.values.aws.auth.iam.access_key_id:
-#@   data.values.aws.auth.iam.secret_access_key or assert.fail("data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key need to be provided both or left empty if using AWS IRSA")
+#@ if data.values.certProvider=="acme-aws":
+#@ if data.values.aws.credentials.accessKey:
+#@   data.values.aws.credentials.secretKey or assert.fail("data.values.aws.credentials.accessKey and data.values.aws.credentials.secretKey need to be provided both or left empty if using AWS IRSA")
 #@ end
-#@ if data.values.aws.auth.iam.secret_access_key:
-#@   data.values.aws.auth.iam.secret_access_key or assert.fail("data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key need to be provided both or left empty if using AWS IRSA")
+#@ if data.values.aws.credentials.secretKey:
+#@   data.values.aws.credentials.secretKey or assert.fail("data.values.aws.credentials.accessKey and data.values.aws.credentials.secretKey need to be provided both or left empty if using AWS IRSA")
 #@ end
 #@ end
 
-#@ if data.values.certs_use=="provided":
-#@   data.values.provided.wildcard_tls.crt or assert.fail("data.values.provided.wildcard_tls.crt can not be empty")
-#@   data.values.provided.wildcard_tls.key or assert.fail("data.values.provided.wildcard_tls.key can not be empty")
+#@ if data.values.certProvider=="provided":
+#@   data.values.provided.wildcartCert.crt or assert.fail("data.values.provided.wildcartCert.crt can not be empty")
+#@   data.values.provided.wildcartCert.key or assert.fail("data.values.provided.wildcartCert.key can not be empty")
 #@ end

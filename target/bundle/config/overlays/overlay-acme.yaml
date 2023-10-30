@@ -1,18 +1,29 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:overlay", "overlay")
 #@ load("@ytt:base64", "base64")
+#@ load("@ytt:assert", "assert")
+#@ load("functions.star", "get_domains")
 
-#@ if data.values.certs_use=="aws":
+#@ if data.values.certProvider=="acme-aws":
 
-#@ if/end (data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key):
+#@ (hasAwsCredsAccessKey, _) = assert.try_to(lambda: len(data.values.aws.credentials.accessKey) > 0)
+#@ (hasAwsCredsSecretKey, _) = assert.try_to(lambda: len(data.values.aws.credentials.secretKey) > 0)
+#@ if (hasAwsCredsSecretKey and not hasAwsCredsAccessKey) or (not hasAwsCredsSecretKey and hasAwsCredsAccessKey):
+#@   assert.fail("`aws.credentials.accessKey` and `aws.credentials.secretKey` must both be provided")
+#@ end
+
+#@ if hasAwsCredsAccessKey and hasAwsCredsSecretKey:
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: aws-route53-creds
+  name: cert-manager-aws-values
   namespace: #@ data.values.certmanager.namespace
+type: Opaque
 data:
-  aws-credentials: #@ base64.encode(data.values.aws.auth.iam.secret_access_key)
+  awsAccessKeyID: #@ base64.encode("{}".format(data.values.aws.credentials.accessKey))
+  awsSecretAccessKey: #@ base64.encode("{}".format(data.values.aws.credentials.secretKey))
+#@ end
 
 #@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
 ---
@@ -30,16 +41,16 @@ spec:
       - dns01:
           route53:
             region: #@ data.values.aws.certs.region
-            #@ if (data.values.aws.auth.iam.access_key_id and data.values.aws.auth.iam.secret_access_key):
-            accessKeyID: #@ data.values.aws.auth.iam.access_key_id
+            #@ if hasAwsCredsAccessKey and hasAwsCredsSecretKey:
+            accessKeyID: #@ data.values.aws.credentials.accessKey
             secretAccessKeySecretRef:
-              name: aws-route53-creds
-              key: aws-credentials
+              name: cert-manager-aws-values
+              key: awsSecretAccessKey
             #@ end
       #@overlay/match by=lambda i,l,r: "http01" in l
       - http01:
           ingress:
-            class: #@ data.values.ingress.ingress_class
+            class: #@ data.values.ingress.ingressClass
 
 #@overlay/match by=overlay.subset({"kind":"Certificate", "metadata": {"name": "wildcard"}})
 ---
@@ -48,7 +59,6 @@ metadata:
   namespace: #@ data.values.ingress.namespace
 spec:
   #@overlay/replace
-  dnsNames:
-    -  #@ "*.{}".format(data.values.domain)
-    -  #@ "*.{}".format(data.values.wildcard_domain)
+  dnsNames: #@ get_domains()
+
 #@ end

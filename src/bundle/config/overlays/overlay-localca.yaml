@@ -1,8 +1,9 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:overlay", "overlay")
 #@ load("@ytt:base64", "base64")
+#@ load("functions.star", "get_domains")
 
-#@ if data.values.certs_use=="local_ca":
+#@ if data.values.certProvider=="local":
 
 ---
 apiVersion: v1
@@ -11,9 +12,8 @@ metadata:
   name: local-root-ca
   namespace: cert-manager
 data:
-  tls.crt: #@ base64.encode(data.values.local.root_ca.crt)
-  tls.key: #@ base64.encode(data.values.local.root_ca.key)
-
+  tls.crt: #@ base64.encode(data.values.local.rootCA.crt)
+  tls.key: #@ base64.encode(data.values.local.rootCA.key)
 
 #@overlay/match by=overlay.subset({"kind":"ClusterIssuer", "metadata": {"name": "wildcard"}})
 ---
@@ -31,7 +31,5 @@ metadata:
   namespace: #@ data.values.ingress.namespace
 spec:
   #@overlay/replace
-  dnsNames:
-  - #@ "*.{}".format(data.values.domain)
-  - #@ "*.{}".format(data.values.wildcard_domain)
+  dnsNames: #@ get_domains()
 #@ end

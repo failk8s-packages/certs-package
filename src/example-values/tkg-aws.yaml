@@ -1,9 +1,0 @@
-#! Add your values here (without ytt annotations)
-domain: failk8s.com
-wildcard_domain: apps.failk8s.com
-certs_use: aws
-aws:
-  auth:
-    iam:
-      access_key_id: AAA
-      secret_access_key: BBB

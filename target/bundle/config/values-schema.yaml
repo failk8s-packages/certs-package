@@ -5,32 +5,41 @@ certmanager:
   namespace: cert-manager
 ingress:
   namespace: projectcontour
-  ingress_class: contour
+  ingressClass: contour
 tlsdelegation:
+  #@schema/default ["*"]
   targetns:
-    - "*"
+    - ""
 
-domain: ""
-wildcard_domain: ""
+#@schema/validation min_len=1
+domains:
+  - ""
 
-certs_use: "" #! One of aws, local_ca, provided
+#@schema/validation one_of=["acme-aws", "local", "provided"]
+certProvider: "" #! One of acme-aws, local, provided
 
 #! Aws credentials for IAM user with privileges to use cert-manager DNS01 (Leave empty if using AWS IAM IRSA)
+#@schema/desc "AWS provider related configuration"
+#@schema/nullable
 aws:
-  auth:
-    iam:
-      access_key_id: ""
-      secret_access_key: ""
+  #@schema/nullable
+  credentials:
+    #@schema/desc "AWS access key. When provided along with the aws.secretKey, a Secret will be created and referenced in the external-dns Deployment."
+    accessKey: ""
+    #@schema/desc "AWS secret key. When provided along with the aws.accessKey, a Secret will be created and referenced in the external-dns Deployment."
+    secretKey: ""
   certs:
     region: eu-west-1
     email: user@none.com #! If you want to get notified by Let's encrypt of certificate expiration
 
+#@schema/nullable
 local:
-  root_ca:
+  rootCA:
     crt: ""
     key: ""
 
+#@schema/nullable
 provided:
-  wildcard_tls:
+  wildcartCert:
     crt: ""
     key: ""

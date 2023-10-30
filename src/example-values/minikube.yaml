@@ -1,8 +1,8 @@
-#! Add your values here (without ytt annotations)
-domain: failk8s.com
-wildcard_domain: apps.failk8s.com
-certs_use: local_ca
-local:
-  root_ca:
+domains:
+  - failk8s.com
+  - apps.failk8s.com
+certProvider: provided
+provided:
+  wildcartCert:
     crt: CRT
     key: KEY

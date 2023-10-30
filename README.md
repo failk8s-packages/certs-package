@@ -1,6 +1,6 @@
 # certs-package
 
-This package provides certificate management functionality using cert-manager and Let's Encrypt and/or a custom CA.
+This package provides wildcard certificate management functionality using cert-manager and Let's Encrypt and/or a custom CA for Educates usage.
 
 See [Cert manager's Route53 Docs](https://docs.cert-manager.io/en/release-0.11/tasks/issuers/setup-acme/dns01/route53.html) for how to configure AWS IAM
 
@@ -8,7 +8,7 @@ See: https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-iss
 
 ## Components
 
-* certs
+- certs
 
 ## Configuration
 
@@ -16,23 +16,22 @@ The following configuration values can be set to customize the certs installatio
 
 ### Global
 
-| Value | Required/Optional | Default |Description |
-|-------|-------------------|---------|-------------|
-| `certmanager.namespace` | Optional | cert-manager | The namespace in which to deploy certs. |
-| `ingress.namespace` | Optional | projectcontour | |
-| `ingress.ingress_class` | Optional | contour | |
-| `tlsdelegation.targetns` | Optional | * | |
-| `domain` | Required | <EMPTY> | |
-| `wildcard_domain` | Required | <EMPTY> | |
-| `certs_use` | Required | <EMPTY> | Values: aws, local_ca, provided |
-| `aws.auth.iam.access_key_id` | Required if certs_use=aws and not using AWS IRSA | <EMPTY> | |
-| `aws.auth.iam.secret_access_key` | Required if certs_use=aws and not using AWS IRSA | <EMPTY> | |
-| `aws.certs.region` | Optional if certs_use=aws | eu-west-1 | |
-| `aws.certs.email` | Optional if certs_use=aws | user@none.com ||
-| `local.root_ca.crt` | Required if certs_use=local_ca | <EMPTY> ||
-| `local.root_ca.key` | Required if certs_use=local_ca | <EMPTY> ||
-| `provided.wildcard_tls.crt` | Required if certs_use=provided | <EMPTY> ||
-| `provided.wildcard_tls.key` | Required if certs_use=provided | <EMPTY> ||
+| Value                       | Required/Optional                                        | Default        | Description                                                                                        |
+| --------------------------- | -------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------- |
+| `certmanager.namespace`     | Optional                                                 | cert-manager   | The namespace in which to deploy certs.                                                            |
+| `ingress.namespace`         | Optional                                                 | projectcontour |                                                                                                    |
+| `ingress.ingressClass`      | Optional                                                 | contour        |                                                                                                    |
+| `tlsdelegation.targetns`    | Optional                                                 | \*             |                                                                                                    |
+| `domains`                   | Required                                                 | <EMPTY>        | List of domains to generate a wildcard for. Wildcard `*` will be added to the provided domain name |
+| `certProvider`              | Required                                                 | <EMPTY>        | Values: acme-aws, local, provided                                                                  |
+| `aws.credentials.accessKey` | Required if certProvider=acme-aws and not using AWS IRSA | <EMPTY>        |                                                                                                    |
+| `aws.credentials.secretKey` | Required if certProvider=acme-aws and not using AWS IRSA | <EMPTY>        |                                                                                                    |
+| `aws.certs.region`          | Optional if certProvider=acme-aws                        | eu-west-1      |                                                                                                    |
+| `aws.certs.email`           | Optional if certProvider=acme-aws                        | user@none.com  |                                                                                                    |
+| `local.rootCA.crt`          | Required if certProvider=local                           | <EMPTY>        |                                                                                                    |
+| `local.rootCA.key`          | Required if certProvider=local                           | <EMPTY>        |                                                                                                    |
+| `provided.wildcartCert.crt` | Required if certProvider=provided                        | <EMPTY>        |                                                                                                    |
+| `provided.wildcartCert.key` | Required if certProvider=provided                        | <EMPTY>        |                                                                                                    |
 
 ## Usage Example
 
@@ -41,19 +40,21 @@ This walkthrough guides you through using certs...
 ## Test
 
 Test aws Route53/Let's encrypt certificate generation:
+
 ```
-ytt -f src/bundle/config -v domain=example.com -v wildcard_domain=apps.example.com -v aws.auth.iam.access_key_id=xxxx -v aws.auth.iam.secret_access_key=yyyy -v certs_use=aws
+ytt -f src/example-values/aws.yaml -f src/bundle/config
 ```
 
 Test providing a local CA to the cluster:
-```
-ytt -f src/bundle/config -v domain=example.com -v wildcard_domain=apps.example.com -v local.root_ca.crt=xxxx -v local.root_ca.key=yyyy -v certs_use=local_ca
-```
 
+```
+ytt -f src/example-values/kind.yaml -f src/bundle/config
+```
 
 Test providing a wildcard secret already generated to the cluster:
+
 ```
-ytt -f src/bundle/config -v domain=example.com -v wildcard_domain=apps.example.com -v provided.wildcard_tls.crt=xxxx -v provided.wildcard_tls.key=yyyy -v certs_use=provided
+ytt -f src/example-values/minikube.yaml -f src/bundle/config
 ```
 
 ## Develop checklist

@@ -1,12 +1,12 @@
 #! Add your values here (without ytt annotations)
-domain: kind.failk8s.com
-wildcard_domain: apps.kind.failk8s.com
+domains:
+  - kind.failk8s.com
+  - apps.kind.failk8s.com
 ingress:
   namespace: ingress
-certs_use: local_ca
+certProvider: local
 local:
-local:
-  root_ca:
+  rootCA:
     crt: |
       -----BEGIN CERTIFICATE-----
       MIIDDjCCAfagAwIBAgIBATANBgkqhkiG9w0BAQsFADAsMR0wGwYDVQQDDBRKb3Jn
