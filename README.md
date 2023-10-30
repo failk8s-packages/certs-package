@@ -26,7 +26,7 @@ The following configuration values can be set to customize the certs installatio
 | `certProvider`              | Required                                                 | <EMPTY>        | Values: acme-aws, local, provided                                                                  |
 | `aws.credentials.accessKey` | Required if certProvider=acme-aws and not using AWS IRSA | <EMPTY>        |                                                                                                    |
 | `aws.credentials.secretKey` | Required if certProvider=acme-aws and not using AWS IRSA | <EMPTY>        |                                                                                                    |
-| `aws.certs.region`          | Optional if certProvider=acme-aws                        | eu-west-1      |                                                                                                    |
+| `aws.certs.region`          | Required if certProvider=acme-aws                        | eu-west-1      |                                                                                                    |
 | `aws.certs.email`           | Optional if certProvider=acme-aws                        | user@none.com  |                                                                                                    |
 | `local.rootCA.crt`          | Required if certProvider=local                           | <EMPTY>        |                                                                                                    |
 | `local.rootCA.key`          | Required if certProvider=local                           | <EMPTY>        |                                                                                                    |

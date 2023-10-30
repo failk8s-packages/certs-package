@@ -6,6 +6,7 @@
 
 #@ if data.values.certProvider=="acme-aws":
 
+#@ (hasEmail, _) = assert.try_to(lambda: len(data.values.aws.certs.email) > 0)
 #@ (hasAwsCredsAccessKey, _) = assert.try_to(lambda: len(data.values.aws.credentials.accessKey) > 0)
 #@ (hasAwsCredsSecretKey, _) = assert.try_to(lambda: len(data.values.aws.credentials.secretKey) > 0)
 #@ if (hasAwsCredsSecretKey and not hasAwsCredsAccessKey) or (not hasAwsCredsSecretKey and hasAwsCredsAccessKey):
@@ -32,6 +33,7 @@ spec:
   selfSigned:
   #@overlay/match missing_ok=True
   acme:
+    #@ if/end hasEmail:
     email: #@ data.values.aws.certs.email
     privateKeySecretRef:
       name: eduk8s-wildcard-acme

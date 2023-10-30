@@ -3,6 +3,5 @@ domains:
   - failk8s.com
   - apps.failk8s.com
 aws:
-  credentials:
-    accessKey: AAAA
-    secretKey: BBBB
+  certs:
+    region: eu-west-1

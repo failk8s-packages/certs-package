@@ -11,15 +11,6 @@
 #@   data.values.local.rootCA.key or assert.fail("missing local.rootCA.key definition")
 #@ end
 
-#@ if data.values.certProvider=="acme-aws":
-#@ if data.values.aws.credentials.accessKey:
-#@   data.values.aws.credentials.secretKey or assert.fail("data.values.aws.credentials.accessKey and data.values.aws.credentials.secretKey need to be provided both or left empty if using AWS IRSA")
-#@ end
-#@ if data.values.aws.credentials.secretKey:
-#@   data.values.aws.credentials.secretKey or assert.fail("data.values.aws.credentials.accessKey and data.values.aws.credentials.secretKey need to be provided both or left empty if using AWS IRSA")
-#@ end
-#@ end
-
 #@ if data.values.certProvider=="provided":
 #@   data.values.provided.wildcartCert.crt or assert.fail("data.values.provided.wildcartCert.crt can not be empty")
 #@   data.values.provided.wildcartCert.key or assert.fail("data.values.provided.wildcartCert.key can not be empty")
